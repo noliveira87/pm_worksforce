@@ -88,6 +88,66 @@ function addProject() {
     }
 }
 
+document.addEventListener('DOMContentLoaded', () => {
+    loadProjectDetails(); // Carrega os detalhes do projeto ao carregar a página
+});
+
+function loadProjectDetails() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get('index');
+
+    if (index !== null && projects[index]) {
+        const project = projects[index];
+
+        // Preenche os campos do formulário com os detalhes do projeto
+        document.getElementById('editProjectName').value = project.name;
+        document.getElementById('editAllocationHours').value = project.allocationHours;
+        document.getElementById('editVacationDays').value = project.vacationDays;
+        document.getElementById('editOriginalEstimate').value = project.originalEstimate;
+
+        // Preenche as opções do menu suspenso com os membros da equipe
+        const selectElement = document.getElementById('editTeamMembers');
+        selectElement.innerHTML = '';
+        members.forEach(member => {
+            const option = document.createElement('option');
+            option.value = member.name;
+            option.textContent = member.name;
+            // Se o membro estiver na equipe do projeto, selecione-o
+            if (project.team.some(teamMember => teamMember.name === member.name)) {
+                option.selected = true;
+            }
+            selectElement.appendChild(option);
+        });
+    }
+}
+
+function saveEditedProject() {
+    // Aqui você pode implementar a lógica para salvar as alterações do projeto
+    // Recupere os valores dos campos do formulário
+    const editedProjectName = document.getElementById('editProjectName').value;
+    const editedAllocationHours = document.getElementById('editAllocationHours').value;
+    const editedVacationDays = document.getElementById('editVacationDays').value;
+    const editedOriginalEstimate = document.getElementById('editOriginalEstimate').value;
+    const selectedMembers = Array.from(document.getElementById('editTeamMembers').selectedOptions).map(option => option.value);
+
+    // Use o índice da URL para acessar o projeto no array projects
+    const urlParams = new URLSearchParams(window.location.search);
+    const index = urlParams.get('index');
+    if (index !== null && projects[index]) {
+        // Atualize os detalhes do projeto no array projects
+        projects[index].name = editedProjectName;
+        projects[index].allocationHours = editedAllocationHours;
+        projects[index].vacationDays = editedVacationDays;
+        projects[index].originalEstimate = editedOriginalEstimate;
+        // Atualize os membros da equipe do projeto
+        projects[index].team = selectedMembers.map(member => ({ name: member, hours: 0 }));
+        // Salve as alterações
+        saveProjects();
+        // Redirecione de volta para a página de detalhes do projeto
+        window.location.href = `project_details.html?index=${index}`;
+    }
+}
+
 function saveProjects() {
     localStorage.setItem(projectsKey, JSON.stringify(projects));
 }
@@ -151,4 +211,3 @@ function renderProjects() {
         projectsList.appendChild(projectItem);
     });
 }
-
