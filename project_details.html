@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detalhes do Projeto</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <script src="scripts/projects.js" defer></script>
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Detalhes do Projeto</h1>
+        <nav class="nav justify-content-center mb-4">
+            <a class="nav-link" href="index.html">Página Inicial</a>
+            <a class="nav-link" href="projects.html">Gestão de Projetos</a>
+        </nav>
+        <div id="projectDetails" class="mt-4">
+            <!-- Detalhes do projeto serão renderizados aqui -->
+        </div>
+        <div class="text-center mt-3">
+            <button id="editProjectBtn" class="btn btn-info mr-2" onclick="editProject()">Editar</button>
+            <button id="deleteProjectBtn" class="btn btn-danger" onclick="deleteProject()">Delete</button>
+        </div>
+    </div>
+</body>
+</html>

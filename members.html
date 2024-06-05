@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Membros</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">Gestão de Membros</h1>
+        <nav class="nav justify-content-center mb-4">
+            <a class="nav-link" href="index.html">Página Inicial</a>
+            <a class="nav-link" href="projects.html">Gestão de Projetos</a>
+        </nav>
+        <form id="memberForm">
+            <div class="form-group">
+                <label for="memberName">Nome do Membro:</label>
+                <input type="text" id="memberName" name="memberName" class="form-control" placeholder="Nome do membro">
+            </div>
+            <button type="button" class="btn btn-primary btn-block" onclick="addMember()">Adicionar Membro</button>
+        </form>
+        <div id="membersList" class="mt-4">
+            <h2 class="text-center">Membros da Equipa</h2>
+            <ul id="members" class="list-group"></ul>
+        </div>
+    </div>
+    <script src="scripts/members.js" defer></script>
+</body>
+</html>
