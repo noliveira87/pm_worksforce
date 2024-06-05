@@ -100,17 +100,55 @@ function loadProjects() {
     }
 }
 
+function editProject(index) {
+    // Redireciona para a página de edição do projeto com o índice do projeto na URL
+    window.location.href = `edit_project.html?index=${index}`;
+}
+
+function deleteProject(index) {
+    if (confirm("Tem certeza de que deseja excluir este projeto?")) {
+        projects.splice(index, 1);
+        saveProjects(); // Salva o array atualizado no armazenamento local
+        renderProjects(); // Renderiza novamente a lista de projetos
+    }
+}
+
 function renderProjects() {
     const projectsList = document.getElementById('projects');
     projectsList.innerHTML = '';
 
     projects.forEach((project, index) => {
         const projectItem = document.createElement('li');
-        projectItem.classList.add('list-group-item');
-        projectItem.textContent = project.name;
-        projectItem.addEventListener('click', () => {
-            window.location.href = `project-details.html?index=${index}`;
-        });
+        projectItem.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-center');
+
+        const projectNameSpan = document.createElement('span');
+        projectNameSpan.textContent = project.name;
+        projectItem.appendChild(projectNameSpan);
+
+        // Adiciona botões de "Editar" e "Apagar" para cada projeto na lista
+        const buttonGroup = document.createElement('div');
+        buttonGroup.classList.add('btn-group');
+
+        const editButton = document.createElement('button');
+        editButton.textContent = 'Editar';
+        editButton.className = 'btn btn-info btn-sm';
+        editButton.onclick = function() {
+            editProject(index);
+        };
+
+        const deleteButton = document.createElement('button');
+        deleteButton.textContent = 'Apagar';
+        deleteButton.className = 'btn btn-danger btn-sm';
+        deleteButton.onclick = function() {
+            deleteProject(index);
+        };
+
+        buttonGroup.appendChild(editButton);
+        buttonGroup.appendChild(deleteButton);
+
+        projectItem.appendChild(buttonGroup);
+
         projectsList.appendChild(projectItem);
     });
 }
+
