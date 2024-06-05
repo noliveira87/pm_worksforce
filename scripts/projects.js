@@ -1,37 +1,52 @@
-// projects.js
-
 const projectsKey = 'project_management_projects';
 let projects = JSON.parse(localStorage.getItem(projectsKey)) || [];
 
-populateTeamMembers();
+document.addEventListener('DOMContentLoaded', () => {
+    loadProjects();
+    loadMembers(); 
+});
 
-function loadProjectDetails() {
-    const urlParams = new URLSearchParams(window.location.search);
-    const index = urlParams.get('index');
-
-    if (index !== null && projects[index]) {
-        const project = projects[index];
-        const projectDetails = document.getElementById('projectDetails');
-
-        if (projectDetails) {
-            const teamMembersDetails = project.team.map(member => {
-                return `<li>${member.name}: ${member.hours} horas</li>`;
-            }).join('');
-
-            projectDetails.innerHTML = `
-                <h2>${project.name}</h2>
-                <p><strong>Team:</strong></p>
-                <ul>${teamMembersDetails}</ul>
-                <p><strong>Vacation Days:</strong> ${project.vacationDays}</p>
-                <p><strong>Original Estimate:</strong> ${project.originalEstimate} days</p>
-                <button class="btn btn-primary" onclick="editProject(${index})">Edit</button>
-            `;
-        }
+function loadMembers() {
+    const storedMembers = localStorage.getItem(membersKey);
+    if (storedMembers) {
+        members = JSON.parse(storedMembers);
+        populateTeamMembers(); // Popula os membros da equipe após o carregamento
     }
 }
 
-function editProject(index) {
-    window.location.href = `edit_project.html?index=${index}`;
+function populateTeamMembers() {
+    const teamMembersContainer = document.getElementById('teamMembers');
+    if (teamMembersContainer) {
+        teamMembersContainer.innerHTML = '';
+
+        members.forEach(member => {
+            const memberDiv = document.createElement('div');
+            memberDiv.classList.add('form-check');
+
+            const memberCheckbox = document.createElement('input');
+            memberCheckbox.type = 'checkbox';
+            memberCheckbox.classList.add('form-check-input');
+            memberCheckbox.id = `member-${member.name}`;
+            memberCheckbox.value = member.name;
+
+            const memberLabel = document.createElement('label');
+            memberLabel.classList.add('form-check-label');
+            memberLabel.htmlFor = `member-${member.name}`;
+            memberLabel.textContent = member.name;
+
+            const memberHoursInput = document.createElement('input');
+            memberHoursInput.type = 'number';
+            memberHoursInput.classList.add('form-control');
+            memberHoursInput.id = `hours-${member.name}`;
+            memberHoursInput.placeholder = 'Horas alocadas';
+            memberHoursInput.style.marginLeft = '10px';
+
+            memberDiv.appendChild(memberCheckbox);
+            memberDiv.appendChild(memberLabel);
+            memberDiv.appendChild(memberHoursInput);
+            teamMembersContainer.appendChild(memberDiv);
+        });
+    }
 }
 
 function addProject() {
@@ -66,6 +81,8 @@ function addProject() {
         setTimeout(() => {
             successMessage.style.display = 'none';
         }, 3000);
+
+        renderProjects(); // Render projects after adding
     } else {
         alert('Please fill in all fields.');
     }
@@ -79,6 +96,7 @@ function loadProjects() {
     const storedProjects = localStorage.getItem(projectsKey);
     if (storedProjects) {
         projects = JSON.parse(storedProjects);
+        renderProjects(); // Render projects after loading
     }
 }
 
@@ -96,38 +114,3 @@ function renderProjects() {
         projectsList.appendChild(projectItem);
     });
 }
-
-function renderGanttChart() {
-    const chart = document.getElementById('chart');
-    if (chart) {
-        chart.innerHTML = '';
-        projects.forEach((project, index) => {
-            const ganttBar = document.createElement('div');
-            ganttBar.className = 'gantt-bar';
-            ganttBar.style.width = `${project.originalEstimate * 10}px`; // Adjust scale as needed
-            const teamMembersNames = project.team.map(member => member.name).join(', ');
-            ganttBar.textContent = `${project.name} (${teamMembersNames})`;
-            chart.appendChild(ganttBar);
-        });
-    }
-}
-
-function deleteProject(index) {
-    if (confirm("Are you sure you want to delete this project?")) {
-        projects.splice(index, 1);
-        saveProjects();
-        renderProjects();
-        renderGanttChart();
-    }
-}
-
-// Initial call to render projects
-renderProjects();
-
-document.addEventListener('DOMContentLoaded', () => {
-    loadProjects();
-    renderProjects();
-    // Load members and populate checkboxes
-    loadMembers(); 
-    populateTeamMembers(); 
-});
