@@ -5,6 +5,7 @@ function loadMembers() {
     const storedMembers = localStorage.getItem(membersKey);
     if (storedMembers) {
         members = JSON.parse(storedMembers);
+        populateTeamMembers(); // Adiciona essa linha para chamar a função após carregar os membros
         renderMembers(); // Renderizar membros ao carregar a página
     }
 }
@@ -73,7 +74,7 @@ function addMember() {
         members.push(newMember);
         saveMembers(); // Salvar membros após adição
         renderMembers();
-        populateTeamMembers();
+        populateTeamMembers(); // Popula os membros da equipe após adição
         memberNameInput.value = "";
     } else {
         alert("Please enter the member's name.");
@@ -113,7 +114,7 @@ function deleteMember(index) {
         members.splice(index, 1);
         saveMembers(); // Salvar membros após exclusão
         renderMembers();
-        populateTeamMembers();
+        populateTeamMembers(); // Popula os membros da equipe após exclusão
     }
 }
 
@@ -123,7 +124,7 @@ function editMember(index) {
         members[index].name = newName.trim();
         saveMembers(); // Salvar membros após edição
         renderMembers();
-        populateTeamMembers();
+        populateTeamMembers(); // Popula os membros da equipe após edição
     } else {
         alert('Please enter a valid name.');
     }
@@ -131,5 +132,5 @@ function editMember(index) {
 
 document.addEventListener('DOMContentLoaded', () => {
     loadMembers();
-    populateTeamMembers();
+    populateTeamMembers(); // Popula os membros da equipe ao carregar a página
 });
